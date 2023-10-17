@@ -70,16 +70,15 @@ def run_training_loop(args):
         print(f"\n********** Iteration {itr} ************")
         # TODO: sample `args.batch_size` transitions using utils.sample_trajectories
         # make sure to use `max_ep_len`
-        trajs, envsteps_this_batch = None, None  # TODO
+        samples = utils.sample_n_trajectories(env, agent.actor, args.batch_size, max_ep_len)
+        trajs, envsteps_this_batch = samples, sum(utils.get_traj_length(sample) for sample in samples) # TODO
         total_envsteps += envsteps_this_batch
-
+        
         # trajs should be a list of dictionaries of NumPy arrays, where each dictionary corresponds to a trajectory.
         # this line converts this into a single dictionary of lists of NumPy arrays.
         trajs_dict = {k: [traj[k] for traj in trajs] for k in trajs[0]}
-
         # TODO: train the agent using the sampled trajectories and the agent's update function
-        train_info: dict = None
-
+        train_info: dict = agent.update(trajs_dict['observation'], trajs_dict['action'], trajs_dict['reward'], trajs_dict['terminal'])
         if itr % args.scalar_log_freq == 0:
             # save eval metrics
             print("\nCollecting data for eval...")
@@ -101,6 +100,8 @@ def run_training_loop(args):
             for key, value in logs.items():
                 print("{} : {}".format(key, value))
                 logger.log_scalar(value, key, itr)
+            # print("Train_EnvstepsSoFar: " + str(logs["Train_EnvstepsSoFar"]))
+            # print("Eval_AverageReturn: " + str(logs["Eval_AverageReturn"]))
             print("Done logging...\n\n")
 
             logger.flush()
