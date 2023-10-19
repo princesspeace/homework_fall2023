@@ -1,4 +1,5 @@
-num_critic_networks: 1
+num_critic_networks: 2
+target_critic_backup_type: min
 exp_name: sac_hopper_singlecritic
 
 # Same for all Hopper experiments

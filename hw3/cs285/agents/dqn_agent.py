@@ -83,7 +83,7 @@ class DQNAgent(nn.Module):
         # TODO(student): train the critic with the target values
         qa_values = self.critic(obs)
         q_values = qa_values.gather(1, action.unsqueeze(1)) # Compute from the data actions; see torch.gather
-        loss = torch.nn.functional.mse_loss(q_values, target_values)
+        loss = self.critic_loss(q_values, target_values)
 
 
         self.critic_optimizer.zero_grad()
