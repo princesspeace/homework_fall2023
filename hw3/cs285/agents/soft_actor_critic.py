@@ -151,7 +151,13 @@ class SoftActorCritic(nn.Module):
         if self.target_critic_backup_type == "doubleq":
             next_qs = torch.stack((next_qs[1], next_qs[0]), dim=0)
         elif self.target_critic_backup_type == "min":
+<<<<<<< HEAD
             next_qs = torch.min(next_qs, dim=0).values
+=======
+            raise NotImplementedError
+        elif self.target_critic_backup_type == "mean":
+            raise NotImplementedError
+>>>>>>> e20c3293a5fa6622e2926edd330c6a7e134b1944
         else:
             # Default, we don't need to do anything.
             pass
@@ -196,19 +202,38 @@ class SoftActorCritic(nn.Module):
             # (For double-Q, clip-Q, etc.)
             next_qs = self.q_backup_strategy(next_qs)
 
+<<<<<<< HEAD
             if self.use_entropy_bonus and self.backup_entropy:
                 # TODO(student): Add entropy bonus to the target values for SAC
                 next_action_entropy = self.entropy(next_action_distribution)
                 next_qs += self.temperature * next_action_entropy
 
+=======
+>>>>>>> e20c3293a5fa6622e2926edd330c6a7e134b1944
             assert next_qs.shape == (
                 self.num_critic_networks,
                 batch_size,
             ), next_qs.shape
+<<<<<<< HEAD
         
             # Compute the target Q-value
             target_values: torch.Tensor = reward + self.discount * (1-done.int()) * next_qs
         
+=======
+
+            if self.use_entropy_bonus and self.backup_entropy:
+                # TODO(student): Add entropy bonus to the target values for SAC
+                next_action_entropy = ...
+                next_qs += ...
+
+            # Compute the target Q-value
+            target_values: torch.Tensor = ...
+            assert target_values.shape == (
+                self.num_critic_networks,
+                batch_size
+            )
+
+>>>>>>> e20c3293a5fa6622e2926edd330c6a7e134b1944
         # TODO(student): Update the critic
         # Predict Q-values
         q_values = self.critic(obs, action)
