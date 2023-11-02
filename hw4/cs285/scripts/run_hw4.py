@@ -73,6 +73,13 @@ def run_training_loop(
     np.random.seed(args.seed)
     torch.manual_seed(args.seed)
     ptu.init_gpu(use_gpu=not args.no_gpu, gpu_id=args.which_gpu)
+    print('/n/n/n/n')
+    print(torch.cuda.is_available())
+    print(torch.cuda.device_count())
+    print(torch.cuda.current_device())
+    print(torch.cuda.device(0))
+    print(torch.cuda.get_device_name(0))
+    print('/n/n/n/n')
 
     # make the gym environment
     env = config["make_env"]()
@@ -214,11 +221,11 @@ def run_training_loop(
                 # train SAC
                 batch = sac_replay_buffer.sample(sac_config["batch_size"])
                 sac_agent.update(
-                    torch.from_numpy(batch["observations"]),
-                    torch.from_numpy(batch["actions"]),
-                    torch.from_numpy(batch["rewards"]),
-                    torch.from_numpy(batch["next_observations"]),
-                    torch.from_numpy(batch["dones"]),
+                    torch.from_numpy(batch["observations"]).to("cuda:0"),
+                    torch.from_numpy(batch["actions"]).to("cuda:0"),
+                    torch.from_numpy(batch["rewards"]).to("cuda:0"),
+                    torch.from_numpy(batch["next_observations"]).to("cuda:0"),
+                    torch.from_numpy(batch["dones"]).to("cuda:0"),
                     i,
                 )
 
