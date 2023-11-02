@@ -28,7 +28,14 @@ def run_training_loop(config: dict, logger: Logger, args: argparse.Namespace):
     # set random seeds
     np.random.seed(args.seed)
     torch.manual_seed(args.seed)
-    ptu.init_gpu(use_gpu=not args.no_gpu, gpu_id=args.which_gpu)
+    ptu.init_gpu(use_gpu=False, gpu_id=args.which_gpu)
+    print('/n/n/n/n')
+    print(torch.cuda.is_available())
+    print(torch.cuda.device_count())
+    print(torch.cuda.current_device())
+    print(torch.cuda.device(0))
+    print(torch.cuda.get_device_name(0))
+    print('/n/n/n/n')
 
     # make the gym environment
     env = config["make_env"]()
